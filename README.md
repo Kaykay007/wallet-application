@@ -10,6 +10,7 @@ This application is built using Java Spring Boot and includes Swagger for API do
 - **Java**: 21
 - **Spring Boot**: 3.x
 - **Spring Security**: For authentication and authorization
+- **Random secret key generator** For testing token impl 
 - **Swagger/OpenAPI**: For API documentation
 - **Postgres database**  for database
 - **Maven**: For project management and build
