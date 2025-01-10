@@ -14,10 +14,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "transactions")
 public class Transaction extends BaseEntity {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
 
     @Column(nullable = false)
     private BigDecimal amount;
@@ -34,6 +32,15 @@ public class Transaction extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "destination_account_id")
-    private Account destinationAccount; // For transfers only
+    private Account destinationAccount;
+    @Column(unique = true, nullable = false)
+    private String transactionReference;
+
+
+    @Column(nullable = false)
+    private BigDecimal sourceAccountBalance;
+
+    @Column(nullable = false)
+    private BigDecimal destinationAccountBalance;
 
 }

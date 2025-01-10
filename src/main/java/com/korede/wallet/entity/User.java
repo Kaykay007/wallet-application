@@ -1,11 +1,13 @@
 package com.korede.wallet.entity;
 
 import com.korede.wallet.model.enums.AccountStatus;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.antlr.v4.runtime.misc.NotNull;
+
+import java.util.Collection;
 
 @Getter
 @Setter
@@ -13,22 +15,29 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class User extends BaseEntity {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
+@Table(name = "users")
+public class User extends BaseEntity  {
 
     @Column(unique = true, nullable = false)
+    @NotNull
+    @Size(min = 3, max = 50)
     private String username;
 
+    @Transient // Prevent serialization
+    private String password; // Store hashed passwords as a transient field
+
     @Column(nullable = false)
-    private String password; // Store hashed passwords
+    @NotNull
+
+    private String hashedPassword;
 
     @Column(unique = true, nullable = false)
+    @NotNull
+    @Email
     private String email;
 
     @Enumerated(EnumType.STRING)
-    private AccountStatus status;
+    private AccountStatus status = AccountStatus.ACTIVE;
 
 
 }

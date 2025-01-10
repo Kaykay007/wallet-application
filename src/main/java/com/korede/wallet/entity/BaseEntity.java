@@ -2,10 +2,11 @@ package com.korede.wallet.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Persistable;
+
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -17,7 +18,8 @@ import java.util.Objects;
 @Getter
 @Setter
 @MappedSuperclass
-public abstract class BaseEntity implements Persistable<Long>, Serializable {
+@EqualsAndHashCode
+public abstract class BaseEntity implements  Serializable {
 
     @Serial
     private static final long serialVersionUID = 4390774380558885855L;
@@ -29,8 +31,6 @@ public abstract class BaseEntity implements Persistable<Long>, Serializable {
 
     @Transient
     private boolean isNew = true;
-
-
 
     @Column(name = "deleted", nullable = false)
     private boolean deleted;
@@ -45,23 +45,17 @@ public abstract class BaseEntity implements Persistable<Long>, Serializable {
         return this.isNew;
     }
 
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == this) return true;
-        if (!(o instanceof BaseEntity other)) return false;
-        if (other.getId() == null || this.getId() == null) return false;
-        return Objects.equals(this.getId(), other.getId());
+    @PrePersist
+    protected void onCreate() {
+        createDate = getCurrentDateTime();
+        lastModified = createDate;
     }
 
-    @Override
-    public int hashCode() {
-        final int PRIME = 59;
-        int result = 1;
-        result = (result * PRIME) + (this.id == null ? 0 : this.id.hashCode());
-        return result;
+    @PreUpdate
+    protected void onUpdate() {
+        lastModified = getCurrentDateTime();
     }
+
 
     public LocalDateTime getCurrentDateTime() {
         return LocalDateTime.now(ZoneId.of("UTC"));
